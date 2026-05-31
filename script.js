@@ -352,7 +352,7 @@ function renderMaterialsList() {
         <p style="font-size: 0.95rem; color: #664d03; margin-bottom: 16px;">
           Imprima e leve para a sala o documento de anotações. Você precisará de <strong>${state.numEntities} cópias</strong> (uma para cada ${state.modo === 'aluno' ? 'aluno' : 'grupo'}).
         </p>
-        <a href="Documento do Algoritmo.jpg" download="Documento do Algoritmo.jpg" class="btn btn-primary" style="background: #ffc107; color: #000; font-weight: 900; border: none;">
+        <a href="Documento do Algoritmo.pdf" download="Documento do Algoritmo.pdf" class="btn btn-primary" style="background: #ffc107; color: #000; font-weight: 900; border: none;">
           Baixar Arquivo
         </a>
       </div>
