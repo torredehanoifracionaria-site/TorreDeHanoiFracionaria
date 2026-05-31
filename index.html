@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torre de Hanoi Fracionária — PIBID</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="welcomeScreen">
+  <div class="welcome-card">
+    <h1>Bem-vindo(a) à Torre de Hanói Fracionária!</h1>
+    
+    <p>Esta é uma ferramenta pedagógica digital desenvolvida para auxiliar professores na integração prática do Pensamento Computacional com o ensino de Matemática (Frações). Além disso, a estrutura dos desafios trabalha conceitos fundamentais da Estrutura de Dados, introduzindo visualmente e de forma lúdica a manipulação de informações em formatos de <span style="color:var(--accent2)">Pilha</span> e <span style="color:var(--accent2)">Fila</span>.</p>
+    
+    <h3>Como funciona?</h3>
+    <p>Diferente da Torre de Hanói (focada no tamanho decrescente dos discos), esta versão <strong>Fracionária</strong> utiliza discos idênticos que representam partes de um inteiro (dependendo da configuração). O objetivo dos alunos não é empilhar tamanhos diferentes, mas sim representação das frações do denomidador escolhido, agrupando os discos nas hastes corretas, seguindo a regra básica: movimentar apenas uma peça por vez.</p>
+    
+    <h3>Sistema Digital</h3>
+    <p>Enquanto os estudantes manipulam fisicamente os discos na torre construída em sala, tendo como base a Computação Desplugada e anotam os passos criados (Algoritmos), o professor utiliza esta plataforma para <strong>configurar as regras da aula</strong>, gerar automaticamente o <strong>gabarito do algoritmo (via Inteligência Artificial)</strong> e <strong>transcrever os movimentos</strong> dos alunos para <strong>simular visualmente</strong> na tela.</p>
+    
+    <div class="welcome-article-box">
+      <h4>Resumo da Aplicação</h4>
+      <p>Material teórico e prático que documenta toda a metodologia, a construção dos materiais físicos e os resultados desta intervenção em sala de aula.</p>
+      <button class="btn btn-primary" style="background: #ffc107; color: #000; font-weight: 900; border: none; font-size: 1.05rem; padding: 12px 24px; width: 100%;">
+        Baixar Documento (PDF)
+      </button>
+    </div>
+
+    <button class="btn btn-primary" onclick="closeWelcomeScreen()" style="width: 100%; font-size: 1.2rem; padding: 14px; display: flex; justify-content: center;">
+      Acessar a Ferramenta Pedagógica Digital
+    </button>
+  </div>
+</div>
+
+<header>
+  <div style="width: 100%;">
+    <h1>Torre de Hanói Fracionária</h1>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h2>Configuração da Sala <span class="info-icon" onclick="showInfoModal('config')">i</span></h2>
+    <div class="grid-row">
+      <div class="field">
+        <label>Número Inteiro (Denominador)</label>
+        <select id="inteiro" onchange="updateGlobal()">
+          <option value="3">3</option>
+          <option value="6">6</option>
+          <option value="9" selected>9</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Modo de Aplicação</label>
+        <select id="modoAplicacao" onchange="updateGlobal()">
+          <option value="grupo" selected>Por Grupo</option>
+          <option value="aluno">Por Aluno</option>
+        </select>
+      </div>
+      <div class="field">
+        <label id="lblQtd">Quantidade de Torres</label>
+        <input type="number" id="numTorres" value="3" onchange="updateGlobal()">
+      </div>
+      <div class="field" id="boxAlunos" style="display: none;">
+        <label>Quantidade Total de Alunos</label>
+        <input type="number" id="numAlunos" value="1" min="1" max="50" onchange="updateGlobal()">
+      </div>
+      <div class="field">
+        <label>Discos por Marcação (Máx: 4)</label>
+        <input type="number" id="discosPorMarca" value="4" min="1" max="4" onchange="updateGlobal()">
+      </div>
+    </div>
+    
+    <button class="btn btn-outline" onclick="openMaterialsModal()" style="margin-top: 16px; width: 100%; font-size: 1rem; border-style: dashed;">Materiais para Construção</button>
+  </section>
+
+  <section class="card">
+    <h2>Preparação da Rodada <span class="info-icon" onclick="showInfoModal('prep')">i</span></h2>
+    <div class="tabs" id="roundTabs"></div>
+    
+    <div class="req-panel">
+      <div class="req-title" id="lblReqTitle">Peças necessárias para montar a Rodada 1:</div>
+      <div class="req-counts" id="reqCounts"></div>
+    </div>
+
+    <div class="init-builder" id="initBuilder"></div>
+    
+    <div style="text-align: center; margin-top: 12px; margin-bottom: 24px;">
+      <button class="btn btn-outline" style="color: #ff4d4d; border-color: #ff4d4d; padding: 6px 16px; font-size: 0.9rem;" onclick="clearInitBuilder()">Esvaziar Mesa</button>
+    </div>
+
+    <div class="gabarito-panel" id="gabaritoPanel" style="display: none;">
+      <div style="display:flex; justify-content: space-between; align-items:center; flex-wrap: wrap; gap: 14px; border-bottom: 1px solid #b5c4ff; padding-bottom: 14px; margin-bottom: 14px;">
+        <h3 style="color: #4361ee; margin: 0; display:flex; align-items:center;">
+          Gabarito do Professor <span class="info-icon" onclick="showInfoModal('gabarito')">i</span>
+        </h3>
+        <button class="btn btn-primary" id="btnCalcGabarito" onclick="calculateAndShowGabarito()" style="margin: 0;">Calcular Solução</button>
+      </div>
+      <div id="gabaritoResult" style="background: transparent;"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Transcrição dos Algoritmos da Turma <span class="info-icon" onclick="showInfoModal('transcricao')">i</span></h2>
+    <p style="font-size:.85rem; color:var(--muted); margin-bottom: 16px;">
+      Transcreva os movimentos anotados pelos estudantes. O sistema dividirá automaticamente a cada 2 letras.
+    </p>
+
+    <div class="log-grid" id="logGrid"></div>
+  </section>
+
+  <section class="card">
+    <h2>Simulação Visual dos Algoritmos <span class="info-icon" onclick="showInfoModal('simulacao')">i</span></h2>
+    
+    <div class="anim-controls">
+      <button class="btn play-btn" onclick="playAnimation()" id="btnPlay" style="display: flex; align-items: center; gap: 8px;">
+        ▶️ <span id="lblPlayBtn">Reproduzir Soluções</span>
+      </button>
+      <button class="btn btn-outline" onclick="resetAnimation()">⏪ Voltar ao Início da Rodada</button>
+    </div>
+
+    <div class="visual-grid" id="visualGrid"></div>
+  </section>
+
+</main>
+
+<div id="materialsModal" class="modal">
+  <div class="modal-content" style="padding-top: 36px;">
+    <span class="modal-close" onclick="closeMaterialsModal()">&times;</span>
+    <div id="materialsPanel" class="materials-panel" style="margin-top: 0; border: none; background: transparent; padding: 0;"></div>
+  </div>
+</div>
+
+<div id="infoModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeInfoModal()">&times;</span>
+    <h3 id="infoTitle" style="color:var(--primary); margin-top:0; margin-bottom: 12px; font-family: 'Fredoka One', cursive;"></h3>
+    <p id="infoText" style="color:var(--text); line-height: 1.6; font-size: 1.05rem;"></p>
+  </div>
+</div>
+
+<div id="confirmModal" class="modal" style="z-index: 2000;">
+  <div class="modal-content small">
+    <h3 id="confirmTitle" style="color: var(--text); margin-top: 0; font-family: 'Fredoka One', cursive; font-size: 1.3rem;">Confirmação</h3>
+    <p id="confirmText" style="color: var(--muted); margin-bottom: 24px; font-size: 1rem;"></p>
+    <div style="display: flex; gap: 12px; justify-content: center;">
+      <button class="btn btn-outline" onclick="closeConfirm()" style="flex: 1;">Cancelar</button>
+      <button class="btn btn-danger" id="btnConfirmAction" style="flex: 1;">Sim, limpar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast">Sucesso!</div>
+
+<script src="script.js"></script>
+</body>
+</html>
